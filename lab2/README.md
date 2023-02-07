@@ -1,4 +1,4 @@
-# lab1
+# lab2
 
 A new Flutter project.
 
@@ -6,7 +6,11 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-To run the code you will need to type "flutter run --no-sound-null-safety" under folder "lab1"
+A few resources to get you started if this is your first Flutter project:
 
-The app can be simulated in Windows/Chrome/Edge window or android phone simulater.
-To run the app in android phone simulater, turn on the simulater up before running the code.
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

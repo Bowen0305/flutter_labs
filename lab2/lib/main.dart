@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/AcceleroScreen.dart';
-import 'package:lab1/GyroScreen.dart';
-import 'package:lab1/ProximityScreen.dart';
+import 'AcceleroScreen.dart';
+import 'GyroScreen.dart';
+import 'ProximityScreen.dart';
 
 void main() {
   runApp(const MyApp());
