@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -12,23 +13,31 @@ class GyroScreen extends StatefulWidget {
 class _GyroScreenState extends State<GyroScreen> {
   @override
   List<bool> dots = [false, false, false, true, false, false, false];
-
+  late StreamSubscription<dynamic> _sensor;
   double x = 0, y = 0, z = 0;
   void initState() {
-    gyroscopeEvents.listen((GyroscopeEvent event) {
+    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
       x = event.x;
       y = event.y;
       z = event.z;
 
-      int i = 0;
-      for (i = 0; i < 7; i++) {
-        if (i < 3) dots[i] = z < (i - 2) * 5;
-        if (i > 3) dots[i] = z > (i - 3) * 5;
+      if (z.abs() > 1) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          if (i < 3) dots[i] = z < (i - 3) * 1;
+          if (i > 3) dots[i] = z > (i - 3) * 1;
+        }
       }
 
       setState(() {});
     });
     // super.initState();
+  }
+
+  @override
+  void dispose() {
+    _sensor.cancel();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {

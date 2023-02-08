@@ -3,6 +3,7 @@ import 'package:selectable_circle/selectable_circle.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math';
 import 'dart:io';
+import 'dart:async';
 
 class AcceleroScreen extends StatefulWidget {
   @override
@@ -14,14 +15,21 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   List<bool> dots = [false, false, false, false, false, false, false];
   double x = 0, y = 0, z = 0;
   double total = 0;
+  late StreamSubscription<dynamic> _sensor;
   void initState() {
-    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+    _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       total = sqrt(x * x + y * y + z * z);
       debugPrint('$total');
       setState(() {});
       // sleep(const Duration(seconds: 1));
     });
     // super.initState();
+  }
+
+  @override
+  void dispose() {
+    _sensor.cancel();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
