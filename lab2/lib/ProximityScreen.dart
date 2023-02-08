@@ -18,17 +18,16 @@ class _ProximityScreenState extends State<ProximityScreen> {
   @override
   void initState() {
     _sensor = ProximitySensor.events.listen((int event) {
-      print(event);
-      // if (event != prev_event) {
-      //   prev_event = event;
-      //   int i = 0;
-      //   for (i = 0; i < 7; i++) {
-      //     dots[i] = (event > 0) ? true : false;
-      //   }
-      //   setState(() {
-      //     Wakelock.enable();
-      //   });
-      // }
+      if (event != prev_event) {
+        prev_event = event;
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = (event > 0) ? true : false;
+        }
+        setState(() {
+          Wakelock.enable();
+        });
+      }
 
       // sleep(const Duration(seconds: 1));
     });
