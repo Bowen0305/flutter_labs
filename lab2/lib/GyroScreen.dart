@@ -21,11 +21,11 @@ class _GyroScreenState extends State<GyroScreen> {
       y = event.y;
       z = event.z;
 
-      if (z.abs() > 2) {
+      if (z.abs() > 2.5) {
         int i = 0;
         for (i = 0; i < 7; i++) {
-          if (i < 3) dots[i] = z < (i - 3) * 2;
-          if (i > 3) dots[i] = z > (i - 3) * 2;
+          if (i < 3) dots[i] = z < (i - 3) * 3;
+          if (i > 3) dots[i] = z > (i - 3) * 3;
         }
       }
 
@@ -54,39 +54,7 @@ class _GyroScreenState extends State<GyroScreen> {
               children: <Widget>[
                 SelectableCircle(
                   width: 30.0,
-                  isSelected: dots[0],
-                  color: Colors.transparent,
-                  selectedBorderColor: Colors.blue,
-                  selectedColor: Colors.blue,
-                  selectMode: SelectMode.simple,
-                ),
-                SelectableCircle(
-                  width: 30.0,
-                  isSelected: dots[1],
-                  color: Colors.transparent,
-                  selectedBorderColor: Colors.blue,
-                  selectedColor: Colors.blue,
-                  selectMode: SelectMode.simple,
-                ),
-                SelectableCircle(
-                  width: 30.0,
-                  isSelected: dots[2],
-                  color: Colors.transparent,
-                  selectedBorderColor: Colors.blue,
-                  selectedColor: Colors.blue,
-                  selectMode: SelectMode.simple,
-                ),
-                SelectableCircle(
-                  width: 30.0,
-                  isSelected: dots[3],
-                  color: Colors.transparent,
-                  selectedBorderColor: Colors.blue,
-                  selectedColor: Colors.blue,
-                  selectMode: SelectMode.simple,
-                ),
-                SelectableCircle(
-                  width: 30.0,
-                  isSelected: dots[4],
+                  isSelected: dots[6],
                   color: Colors.transparent,
                   selectedBorderColor: Colors.blue,
                   selectedColor: Colors.blue,
@@ -102,7 +70,39 @@ class _GyroScreenState extends State<GyroScreen> {
                 ),
                 SelectableCircle(
                   width: 30.0,
-                  isSelected: dots[6],
+                  isSelected: dots[4],
+                  color: Colors.transparent,
+                  selectedBorderColor: Colors.blue,
+                  selectedColor: Colors.blue,
+                  selectMode: SelectMode.simple,
+                ),
+                SelectableCircle(
+                  width: 30.0,
+                  isSelected: dots[3],
+                  color: Colors.transparent,
+                  selectedBorderColor: Colors.blue,
+                  selectedColor: Colors.blue,
+                  selectMode: SelectMode.simple,
+                ),
+                SelectableCircle(
+                  width: 30.0,
+                  isSelected: dots[2],
+                  color: Colors.transparent,
+                  selectedBorderColor: Colors.blue,
+                  selectedColor: Colors.blue,
+                  selectMode: SelectMode.simple,
+                ),
+                SelectableCircle(
+                  width: 30.0,
+                  isSelected: dots[1],
+                  color: Colors.transparent,
+                  selectedBorderColor: Colors.blue,
+                  selectedColor: Colors.blue,
+                  selectMode: SelectMode.simple,
+                ),
+                SelectableCircle(
+                  width: 30.0,
+                  isSelected: dots[0],
                   color: Colors.transparent,
                   selectedBorderColor: Colors.blue,
                   selectedColor: Colors.blue,
