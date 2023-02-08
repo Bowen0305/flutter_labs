@@ -24,16 +24,13 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       total = sqrt(x * x + y * y + z * z);
 
       if (total > 10) {
-        if (total > max) {
-          max = total;
-          print(total);
-        }
+        if (total > max) max = total;
       }
 
       if (total < 5 && max != 0) {
         int i = 0;
         for (i = 0; i < 7; i++) {
-          dots[i] = max > 10 + i * 5;
+          dots[i] = max > 10 + i * 10;
         }
         max = 0;
         setState(() {});
