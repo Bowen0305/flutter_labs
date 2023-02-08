@@ -23,7 +23,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       z = event.z;
       total = sqrt(x * x + y * y + z * z);
 
-      if (total < 10) {
+      if (total > 10) {
         if (total > max) max = total;
       }
 
