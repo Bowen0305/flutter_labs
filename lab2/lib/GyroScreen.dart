@@ -21,11 +21,11 @@ class _GyroScreenState extends State<GyroScreen> {
       y = event.y;
       z = event.z;
 
-      if (z.abs() > 1) {
+      if (z.abs() > 2) {
         int i = 0;
         for (i = 0; i < 7; i++) {
-          if (i < 3) dots[i] = z < (i - 3) * 1;
-          if (i > 3) dots[i] = z > (i - 3) * 1;
+          if (i < 3) dots[i] = z < (i - 3) * 2;
+          if (i > 3) dots[i] = z > (i - 3) * 2;
         }
       }
 
