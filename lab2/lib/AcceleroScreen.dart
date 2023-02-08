@@ -14,12 +14,14 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   @override
   List<bool> dots = [false, false, false, false, false, false, false];
   double x = 0, y = 0, z = 0;
-  double total = 0;
+  double total = 0, max = 0;
   late StreamSubscription<dynamic> _sensor;
   void initState() {
     _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       total = sqrt(x * x + y * y + z * z);
-      debugPrint('$total');
+      if (total > 5) {
+        print(total);
+      }
       setState(() {});
       // sleep(const Duration(seconds: 1));
     });
