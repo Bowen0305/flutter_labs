@@ -18,9 +18,12 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   late StreamSubscription<dynamic> _sensor;
   void initState() {
     _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      x = event.x;
+      y = event.y;
+      z = event.z;
       total = sqrt(x * x + y * y + z * z);
 
-      print(total);
+      print();
 
       setState(() {});
       // sleep(const Duration(seconds: 1));
