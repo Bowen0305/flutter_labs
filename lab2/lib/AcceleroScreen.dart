@@ -23,7 +23,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       z = event.z;
       total = sqrt(x * x + y * y + z * z);
 
-      print();
+      print(total);
 
       setState(() {});
       // sleep(const Duration(seconds: 1));
