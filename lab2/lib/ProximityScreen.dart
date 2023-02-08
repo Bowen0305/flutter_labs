@@ -23,7 +23,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
       // sleep(const Duration(seconds: 1));
     });
 
-    // super.initState();
+    super.initState();
   }
 
   Widget build(BuildContext context) {
