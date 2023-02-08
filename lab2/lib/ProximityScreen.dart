@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
-import 'dart:math';
 import 'dart:io';
+import 'package:wakelock/wakelock.dart';
 
 class ProximityScreen extends StatefulWidget {
   @override
@@ -13,6 +12,7 @@ class ProximityScreen extends StatefulWidget {
 
 class _ProximityScreenState extends State<ProximityScreen> {
   List<bool> dots = [false, false, false, false, false, false, false];
+
   int prev_event = 0;
   late StreamSubscription<dynamic> _sensor;
   @override
@@ -24,13 +24,15 @@ class _ProximityScreenState extends State<ProximityScreen> {
         for (i = 0; i < 7; i++) {
           dots[i] = (event > 0) ? true : false;
         }
-        setState(() {});
+        setState(() {
+          Wakelock.enable();
+        });
       }
 
       // sleep(const Duration(seconds: 1));
     });
 
-    // super.initState();
+    super.initState();
   }
 
   @override

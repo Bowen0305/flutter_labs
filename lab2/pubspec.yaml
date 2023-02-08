@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   proximity_sensor: ^1.0.4
   sensors_plus: ^2.0.1
+  wakelock: ^0.6.2
 
 dev_dependencies:
   flutter_test:
