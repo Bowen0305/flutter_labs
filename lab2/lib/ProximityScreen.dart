@@ -12,18 +12,22 @@ class ProximityScreen extends StatefulWidget {
 class _ProximityScreenState extends State<ProximityScreen> {
   @override
   List<bool> dots = [false, false, false, false, false, false, false];
+  int prev_event = 0;
   void initState() {
     ProximitySensor.events.listen((int event) {
-      setState(() {
+      if (event != prev_event) {
+        prev_event = event;
         int i = 0;
         for (i = 0; i < 7; i++) {
           dots[i] = (event > 0) ? true : false;
         }
-      });
+        setState(() {});
+      }
+
       // sleep(const Duration(seconds: 1));
     });
 
-    super.initState();
+    // super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -95,6 +99,12 @@ class _ProximityScreenState extends State<ProximityScreen> {
                   selectMode: SelectMode.simple,
                 ),
               ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back'),
             ),
           ],
         ),
