@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
@@ -12,9 +14,10 @@ class ProximityScreen extends StatefulWidget {
 class _ProximityScreenState extends State<ProximityScreen> {
   List<bool> dots = [false, false, false, false, false, false, false];
   int prev_event = 0;
+  late StreamSubscription<dynamic> _sensor;
   @override
   void initState() {
-    ProximitySensor.events.listen((int event) {
+    _sensor = ProximitySensor.events.listen((int event) {
       if (event != prev_event) {
         prev_event = event;
         int i = 0;
@@ -32,6 +35,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
 
   @override
   void dispose() {
+    _sensor.cancel();
     super.dispose();
   }
 
