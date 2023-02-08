@@ -19,9 +19,9 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   void initState() {
     _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       total = sqrt(x * x + y * y + z * z);
-      if (total > 5) {
-        print(total);
-      }
+
+      print(total);
+
       setState(() {});
       // sleep(const Duration(seconds: 1));
     });
