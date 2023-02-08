@@ -23,9 +23,18 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       z = event.z;
       total = sqrt(x * x + y * y + z * z);
 
-      print(total);
+      if (total < 10) {
+        if (total > max) max = total;
+      }
 
-      setState(() {});
+      if (total < 5 && max != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = max > 10 + i * 5;
+        }
+        max = 0;
+        setState(() {});
+      }
       // sleep(const Duration(seconds: 1));
     });
     // super.initState();
