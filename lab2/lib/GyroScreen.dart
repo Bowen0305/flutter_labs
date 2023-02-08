@@ -16,12 +16,11 @@ class _GyroScreenState extends State<GyroScreen> {
   double x = 0, y = 0, z = 0;
   void initState() {
     gyroscopeEvents.listen((GyroscopeEvent event) {
-      print(event);
       x = event.x;
       y = event.y;
       z = event.z;
 
-      debugPrint('$z');
+      print(z);
       int i = 0;
       for (i = 0; i < 7; i++) {
         if (i < 3) dots[i] = z < 0;

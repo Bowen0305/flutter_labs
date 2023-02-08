@@ -19,7 +19,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       total = sqrt(x * x + y * y + z * z);
       debugPrint('$total');
       setState(() {});
-      sleep(const Duration(seconds: 1));
+      // sleep(const Duration(seconds: 1));
     });
     // super.initState();
   }

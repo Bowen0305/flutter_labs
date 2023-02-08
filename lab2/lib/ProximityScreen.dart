@@ -20,7 +20,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
           dots[i] = (event > 0) ? true : false;
         }
       });
-      sleep(const Duration(seconds: 1));
+      // sleep(const Duration(seconds: 1));
     });
 
     // super.initState();
