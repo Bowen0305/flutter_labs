@@ -15,14 +15,14 @@ class _GyroScreenState extends State<GyroScreen> {
   List<bool> dots = [false, false, false, true, false, false, false];
   late StreamSubscription<dynamic> _sensor;
   double x = 0, y = 0, z = 0;
+  double max = 0;
   void initState() {
     _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
       x = event.x;
       y = event.y;
       z = event.z;
-
+      print(z);
       if (z.abs() > 5) {
-        print(z);
         int i = 0;
         for (i = 0; i < 7; i++) {
           if (i < 3) dots[i] = z < (i - 3) * 2 - 5;
