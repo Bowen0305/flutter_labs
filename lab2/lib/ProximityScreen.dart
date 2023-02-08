@@ -10,9 +10,9 @@ class ProximityScreen extends StatefulWidget {
 }
 
 class _ProximityScreenState extends State<ProximityScreen> {
-  @override
   List<bool> dots = [false, false, false, false, false, false, false];
   int prev_event = 0;
+  @override
   void initState() {
     ProximitySensor.events.listen((int event) {
       if (event != prev_event) {
@@ -30,6 +30,12 @@ class _ProximityScreenState extends State<ProximityScreen> {
     // super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -99,12 +105,6 @@ class _ProximityScreenState extends State<ProximityScreen> {
                   selectMode: SelectMode.simple,
                 ),
               ],
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Back'),
             ),
           ],
         ),
