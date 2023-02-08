@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'dart:math';
+import 'dart:io';
 
 class GyroScreen extends StatefulWidget {
   @override
@@ -10,6 +12,27 @@ class GyroScreen extends StatefulWidget {
 class _GyroScreenState extends State<GyroScreen> {
   @override
   List<bool> dots = [false, false, false, true, false, false, false];
+
+  double x = 0, y = 0, z = 0;
+  void initState() {
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      print(event);
+      x = event.x;
+      y = event.y;
+      z = event.z;
+
+      debugPrint('$z');
+      int i = 0;
+      for (i = 0; i < 7; i++) {
+        if (i < 3) dots[i] = z < 0;
+        if (i > 3) dots[i] = z > 0;
+      }
+
+      setState(() {});
+    });
+    // super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

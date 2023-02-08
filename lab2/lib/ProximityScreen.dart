@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
+import 'dart:math';
+import 'dart:io';
 
 class ProximityScreen extends StatefulWidget {
   @override
@@ -8,8 +11,22 @@ class ProximityScreen extends StatefulWidget {
 
 class _ProximityScreenState extends State<ProximityScreen> {
   @override
+  List<bool> dots = [false, false, false, false, false, false, false];
+  void initState() {
+    ProximitySensor.events.listen((int event) {
+      setState(() {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = (event > 0) ? true : false;
+        }
+      });
+      sleep(const Duration(seconds: 1));
+    });
+
+    // super.initState();
+  }
+
   Widget build(BuildContext context) {
-    List<bool> dots = [false, false, false, false, false, false, false];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Proximity Screen"),
