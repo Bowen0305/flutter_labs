@@ -3,264 +3,141 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'PairingScreen.dart';
 
 class BluetoothScreen extends StatefulWidget {
-  final String title = 'aaa';
-  final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> devicesList = <BluetoothDevice>[];
-  final Map<Guid, List<int>> readValues = <Guid, List<int>>{};
   @override
   _BluetoothScreenState createState() => _BluetoothScreenState();
 }
 
 class _BluetoothScreenState extends State<BluetoothScreen> {
-  final _writeController = TextEditingController();
-  BluetoothDevice? _connectedDevice;
-  List<BluetoothService> _services = [];
-
-  _addDeviceTolist(final BluetoothDevice device) {
-    if (!widget.devicesList.contains(device)) {
-      setState(() {
-        widget.devicesList.add(device);
-      });
-    }
-  }
+  FlutterBlue flutterBlue = FlutterBlue.instance;
+  List<ScanResult> scanResultList = [];
+  bool _isScanning = false;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    widget.flutterBlue.connectedDevices
-        .asStream()
-        .listen((List<BluetoothDevice> devices) {
-      for (BluetoothDevice device in devices) {
-        _addDeviceTolist(device);
-      }
-    });
-    widget.flutterBlue.scanResults.listen((List<ScanResult> results) {
-      for (ScanResult result in results) {
-        _addDeviceTolist(result.device);
-      }
-    });
-    widget.flutterBlue.startScan();
+    // 블루투스 초기화
+    initBle();
   }
 
-  ListView _buildListViewOfDevices() {
-    List<Widget> containers = <Widget>[];
-    for (BluetoothDevice device in widget.devicesList) {
-      containers.add(
-        SizedBox(
-          height: 50,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Text(device.name == '' ? '(unknown device)' : device.name),
-                    Text(device.id.toString()),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                child: const Text(
-                  'Connect',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  widget.flutterBlue.stopScan();
-                  try {
-                    await device.connect();
-                  } on PlatformException catch (e) {
-                    if (e.code != 'already_connected') {
-                      rethrow;
-                    }
-                  } finally {
-                    _services = await device.discoverServices();
-                  }
-                  setState(() {
-                    _connectedDevice = device;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+  void initBle() {
+    // BLE 스캔 상태 얻기 위한 리스너
+    flutterBlue.isScanning.listen((isScanning) {
+      _isScanning = isScanning;
+      setState(() {});
+    });
+  }
 
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        ...containers,
-      ],
+  /*
+  스캔 시작/정지 함수
+  */
+  scan() async {
+    if (!_isScanning) {
+      // 스캔 중이 아니라면
+      // 기존에 스캔된 리스트 삭제
+      scanResultList.clear();
+      // 스캔 시작, 제한 시간 4초
+      flutterBlue.startScan(timeout: Duration(seconds: 4));
+      // 스캔 결과 리스너
+      flutterBlue.scanResults.listen((results) {
+        scanResultList = results;
+        // UI 갱신
+        setState(() {});
+      });
+    } else {
+      // 스캔 중이라면 스캔 정지
+      flutterBlue.stopScan();
+    }
+  }
+
+  /*
+   여기서부터는 장치별 출력용 함수들
+  */
+  /*  장치의 신호값 위젯  */
+  Widget deviceSignal(ScanResult r) {
+    return Text(r.rssi.toString());
+  }
+
+  /* 장치의 MAC 주소 위젯  */
+  Widget deviceMacAddress(ScanResult r) {
+    return Text(r.device.id.id);
+  }
+
+  /* 장치의 명 위젯  */
+  Widget deviceName(ScanResult r) {
+    String name = '';
+
+    if (r.device.name.isNotEmpty) {
+      // device.name에 값이 있다면
+      name = r.device.name;
+    } else if (r.advertisementData.localName.isNotEmpty) {
+      // advertisementData.localName에 값이 있다면
+      name = r.advertisementData.localName;
+    } else {
+      // 둘다 없다면 이름 알 수 없음...
+      name = 'N/A';
+    }
+    return Text(name);
+  }
+
+  /* BLE 아이콘 위젯 */
+  Widget leading(ScanResult r) {
+    return CircleAvatar(
+      child: Icon(
+        Icons.bluetooth,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.cyan,
     );
   }
 
-  List<ButtonTheme> _buildReadWriteNotifyButton(
-      BluetoothCharacteristic characteristic) {
-    List<ButtonTheme> buttons = <ButtonTheme>[];
-
-    if (characteristic.properties.read) {
-      buttons.add(
-        ButtonTheme(
-          minWidth: 10,
-          height: 20,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ElevatedButton(
-              child: const Text('READ', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                var sub = characteristic.value.listen((value) {
-                  setState(() {
-                    widget.readValues[characteristic.uuid] = value;
-                  });
-                });
-                await characteristic.read();
-                sub.cancel();
-              },
-            ),
-          ),
-        ),
-      );
-    }
-    if (characteristic.properties.write) {
-      buttons.add(
-        ButtonTheme(
-          minWidth: 10,
-          height: 20,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ElevatedButton(
-              child: const Text('WRITE', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Write"),
-                        content: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                controller: _writeController,
-                              ),
-                            ),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            child: const Text("Send"),
-                            onPressed: () {
-                              characteristic.write(
-                                  utf8.encode(_writeController.value.text));
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ElevatedButton(
-                            child: const Text("Cancel"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      );
-                    });
-              },
-            ),
-          ),
-        ),
-      );
-    }
-    if (characteristic.properties.notify) {
-      buttons.add(
-        ButtonTheme(
-          minWidth: 10,
-          height: 20,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ElevatedButton(
-              child:
-                  const Text('NOTIFY', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                characteristic.value.listen((value) {
-                  setState(() {
-                    widget.readValues[characteristic.uuid] = value;
-                  });
-                });
-                await characteristic.setNotifyValue(true);
-              },
-            ),
-          ),
-        ),
-      );
-    }
-
-    return buttons;
-  }
-
-  ListView _buildConnectDeviceView() {
-    List<Widget> containers = <Widget>[];
-
-    for (BluetoothService service in _services) {
-      List<Widget> characteristicsWidget = <Widget>[];
-
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        characteristicsWidget.add(
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(characteristic.uuid.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    ..._buildReadWriteNotifyButton(characteristic),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Text('Value: aaaaa'),
-                    //Text('Value: ${widget.readValues[characteristic.uuid]}'),
-                  ],
-                ),
-                const Divider(),
-              ],
-            ),
-          ),
-        );
-      }
-      containers.add(
-        ExpansionTile(
-            title: Text(service.uuid.toString()),
-            children: characteristicsWidget),
-      );
-    }
-
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        ...containers,
-      ],
+  /* 장치 아이템을 탭 했을때 호출 되는 함수 */
+  void onTap(ScanResult r) {
+    // 단순히 이름만 출력
+    print('${r.device.name}');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PairingScreen(device: r.device)),
     );
   }
 
-  ListView _buildView() {
-    if (_connectedDevice != null) {
-      return _buildConnectDeviceView();
-    }
-    return _buildListViewOfDevices();
+  /* 장치 아이템 위젯 */
+  Widget listItem(ScanResult r) {
+    return ListTile(
+      onTap: () => onTap(r),
+      leading: leading(r),
+      title: deviceName(r),
+      subtitle: deviceMacAddress(r),
+      trailing: deviceSignal(r),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Pairable Devices'),
       ),
-      body: _buildView(),
+      body: Center(
+        /* 장치 리스트 출력 */
+        child: ListView.separated(
+          itemCount: scanResultList.length,
+          itemBuilder: (context, index) {
+            return listItem(scanResultList[index]);
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider();
+          },
+        ),
+      ),
+      /* 장치 검색 or 검색 중지  */
+      floatingActionButton: FloatingActionButton(
+        onPressed: scan,
+        // 스캔 중이라면 stop 아이콘을, 정지상태라면 search 아이콘으로 표시
+        child: Icon(_isScanning ? Icons.stop : Icons.search),
+      ),
     );
   }
 }
