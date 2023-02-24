@@ -66,7 +66,8 @@ class _PairingScreenState extends State<PairingScreen> {
     globalcharacteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
     await globalcharacteristic.setNotifyValue(true);
-    print('listen');
+    var a = globalcharacteristic.deviceId;
+    print('\n\nID --------  $a\n\n');
     globalcharacteristic.value.listen((value) {
       print('notification received: $value');
       if (value.length == 2) {
