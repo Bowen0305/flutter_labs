@@ -97,7 +97,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   /* 장치 아이템을 탭 했을때 호출 되는 함수 */
   void onTap(ScanResult r) {
     // 단순히 이름만 출력
-    print('${r.device.name}');
+    // print('${r.device.name}');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PairingScreen(device: r.device)),

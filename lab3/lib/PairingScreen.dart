@@ -66,7 +66,9 @@ class _PairingScreenState extends State<PairingScreen> {
     globalcharacteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
     await globalcharacteristic.setNotifyValue(true);
+    print('listen');
     globalcharacteristic.value.listen((value) {
+      print('notification received');
       globalvalue = value[0].toDouble();
       global_neg = value[1];
       print('receive: $globalvalue , $global_neg');
@@ -144,26 +146,26 @@ class _PairingScreenState extends State<PairingScreen> {
         });
         // 각 속성을 디버그에 출력
         for (BluetoothService service in bleServices) {
-          print('============================================');
-          print('Service UUID: ${service.uuid}');
+          // print('============================================');
+          // print('Service UUID: ${service.uuid}');
           for (BluetoothCharacteristic c in service.characteristics) {
-            print('\tcharacteristic UUID: ${c.uuid.toString()}');
-            print('\t\twrite: ${c.properties.write}');
-            print('\t\tread: ${c.properties.read}');
-            print('\t\tnotify: ${c.properties.notify}');
-            print('\t\tisNotifying: ${c.isNotifying}');
-            print(
-                '\t\twriteWithoutResponse: ${c.properties.writeWithoutResponse}');
-            print('\t\tindicate: ${c.properties.indicate}');
+            // print('\tcharacteristic UUID: ${c.uuid.toString()}');
+            // print('\t\twrite: ${c.properties.write}');
+            // print('\t\tread: ${c.properties.read}');
+            // print('\t\tnotify: ${c.properties.notify}');
+            // print('\t\tisNotifying: ${c.isNotifying}');
+            // print(
+            //     '\t\twriteWithoutResponse: ${c.properties.writeWithoutResponse}');
+            // print('\t\tindicate: ${c.properties.indicate}');
 
             // notify나 indicate가 true면 디바이스에서 데이터를 보낼 수 있는 캐릭터리스틱이니 활성화 한다.
             // 단, descriptors가 비었다면 notify를 할 수 없으므로 패스!
             if (c.properties.notify && c.descriptors.isNotEmpty) {
               // 진짜 0x2902 가 있는지 단순 체크용!
               for (BluetoothDescriptor d in c.descriptors) {
-                print('BluetoothDescriptor uuid ${d.uuid}');
+                // print('BluetoothDescriptor uuid ${d.uuid}');
                 if (d.uuid == BluetoothDescriptor.cccd) {
-                  print('d.lastValue: ${d.lastValue}');
+                  // print('d.lastValue: ${d.lastValue}');
                 }
               }
 
@@ -175,7 +177,7 @@ class _PairingScreenState extends State<PairingScreen> {
                   notifyDatas[c.uuid.toString()] = List.empty();
                   c.value.listen((value) {
                     // 데이터 읽기 처리!
-                    print('${c.uuid}: $value');
+                    // print('${c.uuid}: $value');
                     setState(() {
                       // 받은 데이터 저장 화면 표시용
                       notifyDatas[c.uuid.toString()] = value;
@@ -185,7 +187,7 @@ class _PairingScreenState extends State<PairingScreen> {
                   // 설정 후 일정시간 지연
                   await Future.delayed(const Duration(milliseconds: 500));
                 } catch (e) {
-                  print('error ${c.uuid} $e');
+                  // print('error ${c.uuid} $e');
                 }
               }
             }

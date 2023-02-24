@@ -53,7 +53,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   }
 
   Future<void> send() async {
-    await globalcharacteristic.write([0x20], withoutResponse: false);
+    await globalcharacteristic.write([20], withoutResponse: true);
   }
 
   @override
