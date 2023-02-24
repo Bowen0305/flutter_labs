@@ -68,9 +68,14 @@ class _PairingScreenState extends State<PairingScreen> {
     await globalcharacteristic.setNotifyValue(true);
     print('listen');
     globalcharacteristic.value.listen((value) {
-      print('notification received');
-      globalvalue = value[0].toDouble();
-      global_neg = value[1];
+      print('notification received: $value');
+      if (value.length == 2) {
+        globalvalue = value[0].toDouble();
+        global_neg = value[1];
+      }
+      if (value.length == 1) {
+        globalvalue = value[0].toDouble();
+      }
       print('receive: $globalvalue , $global_neg');
     });
 
