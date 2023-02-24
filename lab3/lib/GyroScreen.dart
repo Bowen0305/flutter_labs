@@ -38,12 +38,17 @@ class _GyroScreenState extends State<GyroScreen> {
         }
 
         setState(() {});
-        characteristic.write([max.round()], withoutResponse: true);
+        if (max > 0)
+          characteristic.write([max.round(), 0], withoutResponse: true);
+        else
+          characteristic.write([max.round(), 1], withoutResponse: true);
         max = 0;
       }
 
       if (globalvalue != 0) {
         int i = 0;
+        if (global_neg == 1) globalvalue = globalvalue * -1;
+
         for (i = 0; i < 7; i++) {
           if (i < 3) dots[i] = globalvalue < (i - 3) * 2 - 5;
           if (i > 3) dots[i] = globalvalue > (i - 3) * 2 + 5;
