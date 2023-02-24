@@ -59,13 +59,13 @@ class _PairingScreenState extends State<PairingScreen> {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     // 상태 리스터 해제
     _stateListener?.cancel();
     BluetoothService service = _get_wn_service();
     globalcharacteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
-    globalcharacteristic.setNotifyValue(true);
+    await globalcharacteristic.setNotifyValue(true);
     globalcharacteristic.value.listen((value) {
       globalvalue = value[0].toDouble();
       global_neg = value[1];
