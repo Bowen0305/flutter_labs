@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:selectable_circle/selectable_circle.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -36,7 +38,8 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        await globalcharacteristic.write([20, 30], withoutResponse: true);
+        await globalcharacteristic.write(utf8.encode('3'),
+            withoutResponse: true);
         max = 0;
       }
 
