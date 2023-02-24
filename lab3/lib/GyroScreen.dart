@@ -39,9 +39,9 @@ class _GyroScreenState extends State<GyroScreen> {
 
         setState(() {});
         if (max > 0)
-          characteristic.write([max.round(), 0], withoutResponse: true);
+          globalcharacteristic.write([max.round(), 0], withoutResponse: true);
         else
-          characteristic.write([max.round(), 1], withoutResponse: true);
+          globalcharacteristic.write([max.round(), 1], withoutResponse: true);
         max = 0;
       }
 
