@@ -39,6 +39,7 @@ dependencies:
   sensors_plus: ^2.0.1
   wakelock: ^0.6.2
   flutter_blue: ^0.8.0
+  bluetooth_connector: ^0.0.3
 
 dev_dependencies:
   flutter_test:
