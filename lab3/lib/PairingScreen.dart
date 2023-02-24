@@ -51,8 +51,10 @@ class _PairingScreenState extends State<PairingScreen> {
   }
 
   BluetoothService _get_wn_service() {
-    BluetoothService c = bluetoothService.firstWhere(
-        (s) => s.uuid == Guid("8667556c-9a37-4c91-84ed-54ee27d90049"));
+    BluetoothService c = bluetoothService.firstWhere((s) =>
+        s.uuid ==
+        Guid(
+            "d0611e78-bbb4-4591-a5f8-487910ae4366")); //8667556c-9a37-4c91-84ed-54ee27d90049
     BluetoothService service = _get_wn_service();
     globalcharacteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
