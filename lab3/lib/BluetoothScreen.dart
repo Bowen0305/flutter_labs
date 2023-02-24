@@ -1,167 +1,265 @@
-import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:bluetooth_connector/bluetooth_connector.dart';
 
 class BluetoothScreen extends StatefulWidget {
+  final String title = 'Flutter BLE Demo';
+  final FlutterBlue flutterBlue = FlutterBlue.instance;
+  final List<BluetoothDevice> devicesList = <BluetoothDevice>[];
+  final Map<Guid, List<int>> readValues = <Guid, List<int>>{};
   @override
   _BluetoothScreenState createState() => _BluetoothScreenState();
 }
 
 class _BluetoothScreenState extends State<BluetoothScreen> {
-  BluetoothConnector flutterbluetoothadapter = BluetoothConnector();
-  StreamSubscription? _btConnectionStatusListener, _btReceivedMessageListener;
-  String _connectionStatus = "NONE";
-  List<BtDevice> devices = [];
-  String? _recievedMessage;
-  TextEditingController _controller = TextEditingController();
+  final _writeController = TextEditingController();
+  BluetoothDevice? _connectedDevice;
+  List<BluetoothService> _services = [];
+
+  _addDeviceTolist(final BluetoothDevice device) {
+    if (!widget.devicesList.contains(device)) {
+      setState(() {
+        widget.devicesList.add(device);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    flutterbluetoothadapter
-        .initBlutoothConnection("20585adb-d260-445e-934b-032a2c8b2e14");
-    flutterbluetoothadapter
-        .checkBluetooth()
-        .then((value) => print(value.toString()));
-    _startListening();
+    widget.flutterBlue.connectedDevices
+        .asStream()
+        .listen((List<BluetoothDevice> devices) {
+      for (BluetoothDevice device in devices) {
+        _addDeviceTolist(device);
+      }
+    });
+    widget.flutterBlue.scanResults.listen((List<ScanResult> results) {
+      for (ScanResult result in results) {
+        _addDeviceTolist(result.device);
+      }
+    });
+    widget.flutterBlue.startScan();
   }
 
-  _startListening() {
-    _btConnectionStatusListener =
-        flutterbluetoothadapter.connectionStatus().listen((dynamic status) {
-      setState(() {
-        _connectionStatus = status.toString();
-      });
-    });
-    _btReceivedMessageListener =
-        flutterbluetoothadapter.receiveMessages().listen((dynamic newMessage) {
-      setState(() {
-        _recievedMessage = newMessage.toString();
-      });
-    });
-  }
+  ListView _buildListViewOfDevices() {
+    List<Widget> containers = <Widget>[];
+    for (BluetoothDevice device in widget.devicesList) {
+      containers.add(
+        SizedBox(
+          height: 50,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Text(device.name == '' ? '(unknown device)' : device.name),
+                    Text(device.id.toString()),
+                  ],
+                ),
+              ),
+              TextButton(
+                child: const Text(
+                  'Connect',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  widget.flutterBlue.stopScan();
+                  try {
+                    await device.connect();
+                  } on PlatformException catch (e) {
+                    if (e.code != 'already_connected') {
+                      rethrow;
+                    }
+                  } finally {
+                    _services = await device.discoverServices();
+                  }
+                  setState(() {
+                    _connectedDevice = device;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        await flutterbluetoothadapter.startServer();
-                      },
-                      child: const Text('LISTEN'),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        devices = await flutterbluetoothadapter.getDevices();
-                        setState(() {});
-                      },
-                      child: const Text('LIST DEVICES'),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Text("STATUS - $_connectionStatus"),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 20,
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                children: _createDevices(),
-              ),
-            ),
-            Text(
-              _recievedMessage ?? "NO MESSAGE",
-              style: const TextStyle(fontSize: 24),
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  flex: 4,
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _controller,
-                      decoration:
-                          const InputDecoration(hintText: "Write message"),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                      onPressed: () {
-                        flutterbluetoothadapter.sendMessage(
-                            _controller.text ?? "no msg",
-                            sendByteByByte: false);
-//                        flutterbluetoothadapter.sendMessage(".",
-//                            sendByteByByte: true);
-                        _controller.text = "";
-                      },
-                      child: const Text('SEND'),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: <Widget>[
+        ...containers,
+      ],
     );
   }
 
-  _createDevices() {
-    if (devices.isEmpty) {
-      return [
-        const Center(
-          child: Text("No Paired Devices listed..."),
-        )
-      ];
-    }
-    List<Widget> deviceList = [];
-    devices.forEach((element) {
-      deviceList.add(
-        InkWell(
-          key: UniqueKey(),
-          onTap: () {
-            flutterbluetoothadapter.startClient(devices.indexOf(element), true);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(border: Border.all()),
-            child: Text(
-              element.name.toString(),
-              style: const TextStyle(fontSize: 18),
+  List<ButtonTheme> _buildReadWriteNotifyButton(
+      BluetoothCharacteristic characteristic) {
+    List<ButtonTheme> buttons = <ButtonTheme>[];
+
+    if (characteristic.properties.read) {
+      buttons.add(
+        ButtonTheme(
+          minWidth: 10,
+          height: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: TextButton(
+              child: const Text('READ', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                var sub = characteristic.value.listen((value) {
+                  setState(() {
+                    widget.readValues[characteristic.uuid] = value;
+                  });
+                });
+                await characteristic.read();
+                sub.cancel();
+              },
             ),
           ),
         ),
       );
-    });
-    return deviceList;
+    }
+    if (characteristic.properties.write) {
+      buttons.add(
+        ButtonTheme(
+          minWidth: 10,
+          height: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ElevatedButton(
+              child: const Text('WRITE', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Write"),
+                        content: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                controller: _writeController,
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text("Send"),
+                            onPressed: () {
+                              characteristic.write(
+                                  utf8.encode(_writeController.value.text));
+                              Navigator.pop(context);
+                            },
+                          ),
+                          TextButton(
+                            child: const Text("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+          ),
+        ),
+      );
+    }
+    if (characteristic.properties.notify) {
+      buttons.add(
+        ButtonTheme(
+          minWidth: 10,
+          height: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ElevatedButton(
+              child:
+                  const Text('NOTIFY', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                characteristic.value.listen((value) {
+                  setState(() {
+                    widget.readValues[characteristic.uuid] = value;
+                  });
+                });
+                await characteristic.setNotifyValue(true);
+              },
+            ),
+          ),
+        ),
+      );
+    }
+
+    return buttons;
+  }
+
+  ListView _buildConnectDeviceView() {
+    List<Widget> containers = <Widget>[];
+
+    for (BluetoothService service in _services) {
+      List<Widget> characteristicsWidget = <Widget>[];
+
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        characteristicsWidget.add(
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text(characteristic.uuid.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    ..._buildReadWriteNotifyButton(characteristic),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('Value: ${widget.readValues[characteristic.uuid]}'),
+                  ],
+                ),
+                const Divider(),
+              ],
+            ),
+          ),
+        );
+      }
+      containers.add(
+        ExpansionTile(
+            title: Text(service.uuid.toString()),
+            children: characteristicsWidget),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: <Widget>[
+        ...containers,
+      ],
+    );
+  }
+
+  ListView _buildView() {
+    if (_connectedDevice != null) {
+      return _buildConnectDeviceView();
+    }
+    return _buildListViewOfDevices();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: _buildView(),
+    );
   }
 }
