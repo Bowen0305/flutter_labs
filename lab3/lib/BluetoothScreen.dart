@@ -60,7 +60,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                   ],
                 ),
               ),
-              TextButton(
+              ElevatedButton(
                 child: const Text(
                   'Connect',
                   style: TextStyle(color: Colors.white),
@@ -106,7 +106,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
           height: 20,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: TextButton(
+            child: ElevatedButton(
               child: const Text('READ', style: TextStyle(color: Colors.white)),
               onPressed: () async {
                 var sub = characteristic.value.listen((value) {
@@ -147,7 +147,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                           ],
                         ),
                         actions: <Widget>[
-                          TextButton(
+                          ElevatedButton(
                             child: const Text("Send"),
                             onPressed: () {
                               characteristic.write(
@@ -155,7 +155,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                               Navigator.pop(context);
                             },
                           ),
-                          TextButton(
+                          ElevatedButton(
                             child: const Text("Cancel"),
                             onPressed: () {
                               Navigator.pop(context);
@@ -222,7 +222,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                 ),
                 Row(
                   children: <Widget>[
-                    Text('Value: ${widget.readValues[characteristic.uuid]}'),
+                    Text('Value: aaaaa'),
+                    //Text('Value: ${widget.readValues[characteristic.uuid]}'),
                   ],
                 ),
                 const Divider(),
