@@ -35,7 +35,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        send();
+        globalcharacteristic.write([20, 30], withoutResponse: true);
         max = 0;
       }
 
@@ -50,10 +50,6 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       // sleep(const Duration(seconds: 1));
     });
     // super.initState();
-  }
-
-  Future<void> send() async {
-    await globalcharacteristic.write([0x01, 20], withoutResponse: true);
   }
 
   @override
