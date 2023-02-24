@@ -38,7 +38,7 @@ dependencies:
   proximity_sensor: ^1.0.4
   sensors_plus: ^2.0.1
   wakelock: ^0.6.2
-  bluetooth: ^0.1.0
+  flutter_blue: ^0.8.0
 
 dev_dependencies:
   flutter_test:
