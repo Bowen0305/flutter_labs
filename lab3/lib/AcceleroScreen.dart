@@ -16,15 +16,16 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   List<bool> dots = [false, false, false, false, false, false, false];
   double x = 0, y = 0, z = 0;
   double total = 0, max = 0;
+  int c = 0;
   late StreamSubscription<dynamic> _sensor;
   void initState() {
-    _sensor =
-        userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
+    _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       x = event.x;
       y = event.y;
       z = event.z;
-      total = sqrt(x * x + y * y + z * z);
-
+      sleep(const Duration(seconds: 1));
+      c += 1;
+      max = c * 15 + 5;
       if (total > 10) {
         if (total > max) max = total;
       }
@@ -36,7 +37,6 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        await write([total.round()]);
         max = 0;
       }
 
@@ -48,6 +48,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         globalvalue = 0;
         setState(() {});
       }
+
       // sleep(const Duration(seconds: 1));
     });
     // super.initState();

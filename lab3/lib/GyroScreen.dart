@@ -17,11 +17,15 @@ class _GyroScreenState extends State<GyroScreen> {
   late StreamSubscription<dynamic> _sensor;
   double x = 0, y = 0, z = 0;
   double max = 0;
+  List<double> c = [7.0, 10.0, -7.0];
+  int c2 = 0;
   void initState() {
     _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
       x = event.x;
       y = event.y;
-      z = event.z;
+      z = c[c2];
+      sleep(const Duration(seconds: 1));
+      c2 += 1;
       if (z.abs() > 5) {
         if (z > 0) {
           if (z > max) max = z;

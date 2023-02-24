@@ -19,6 +19,11 @@ class _ProximityScreenState extends State<ProximityScreen> {
   @override
   void initState() {
     _sensor = ProximitySensor.events.listen((int event) {
+      sleep(const Duration(milliseconds: 30));
+      if (event == 0)
+        event += 1;
+      else
+        event -= 1;
       if (event != prev_event) {
         prev_event = event;
         int i = 0;
