@@ -54,7 +54,7 @@ class _PairingScreenState extends State<PairingScreen> {
     BluetoothService c = bluetoothService.firstWhere((s) =>
         s.uuid ==
         Guid(
-            "d0611e78-bbb4-4591-a5f8-487910ae4366")); //8667556c-9a37-4c91-84ed-54ee27d90049
+            "9fa480e0-4967-4542-9390-d343dc5d04ae")); //8667556c-9a37-4c91-84ed-54ee27d90049    d0611e78-bbb4-4591-a5f8-487910ae4366
     return c;
   }
 
