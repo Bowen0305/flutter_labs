@@ -36,10 +36,10 @@ class _GyroScreenState extends State<GyroScreen> {
           if (i < 3) dots[i] = max < (i - 3) * 2 - 5;
           if (i > 3) dots[i] = max > (i - 3) * 2 + 5;
         }
-        characteristic.write([max.round()], withoutResponse: true);
-        max = 0;
 
         setState(() {});
+        characteristic.write([max.round()], withoutResponse: true);
+        max = 0;
       }
 
       if (globalvalue != 0) {
@@ -48,7 +48,6 @@ class _GyroScreenState extends State<GyroScreen> {
           if (i < 3) dots[i] = globalvalue < (i - 3) * 2 - 5;
           if (i > 3) dots[i] = globalvalue > (i - 3) * 2 + 5;
         }
-        globalvalue = 0;
         setState(() {});
         globalvalue = 0;
       }
