@@ -52,7 +52,7 @@ class _PairingScreenState extends State<PairingScreen> {
 
   BluetoothService _get_wn_service() {
     BluetoothService c = bluetoothService.firstWhere(
-        (s) => s.uuid == Guid("d0611e78-bbb4-4591-a5f8-487910ae4366"));
+        (s) => s.uuid == Guid("8667556c-9a37-4c91-84ed-54ee27d90049"));
     return c;
   }
 
@@ -67,6 +67,7 @@ class _PairingScreenState extends State<PairingScreen> {
     characteristic.value.listen((value) {
       globalvalue = value[0].toDouble();
       global_neg = value[1];
+      print('receive: $globalvalue , $global_neg');
     });
 
     // 연결 해제
