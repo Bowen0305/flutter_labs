@@ -62,12 +62,11 @@ class _PairingScreenState extends State<PairingScreen> {
   Future<void> dispose() async {
     // 상태 리스터 해제
     _stateListener?.cancel();
-    BluetoothService service = _get_wn_service();
-    globalcharacteristic = service.characteristics
+    globalservice = _get_wn_service();
+    globalcharacteristic = globalservice.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
     await globalcharacteristic.setNotifyValue(true);
     var a = globalcharacteristic.deviceId;
-    print('\n\nID --------  $a\n\n');
     globalcharacteristic.value.listen((value) {
       print('notification received: $value');
       if (value.length == 2) {

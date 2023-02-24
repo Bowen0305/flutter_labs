@@ -36,8 +36,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        await globalcharacteristic
-            .write([total.round()], withoutResponse: true);
+        await write([total.round()]);
         max = 0;
       }
 
