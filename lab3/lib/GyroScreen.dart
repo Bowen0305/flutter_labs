@@ -18,7 +18,7 @@ class _GyroScreenState extends State<GyroScreen> {
   double x = 0, y = 0, z = 0;
   double max = 0;
   void initState() {
-    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) async {
+    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
       x = event.x;
       y = event.y;
       z = event.z;
