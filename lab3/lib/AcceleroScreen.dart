@@ -23,7 +23,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       x = event.x;
       y = event.y;
       z = event.z;
-      sleep(const Duration(seconds: 1));
+
       c += 1;
       max = c * 15 + 5;
       if (total > 10) {
@@ -49,7 +49,9 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         setState(() {});
       }
 
-      // sleep(const Duration(seconds: 1));
+      sleep(const Duration(seconds: 1));
+      c += 1;
+      max = c * 15 + 5;
     });
     // super.initState();
   }
