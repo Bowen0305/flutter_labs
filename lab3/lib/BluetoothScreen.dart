@@ -9,9 +9,7 @@ class BluetoothScreen extends StatefulWidget {
 
 class _BluetoothScreenState extends State<BluetoothScreen> {
   FlutterBlue _flutterBlue = FlutterBlue.instance;
-  void _check() {
-    print(_flutterBlue.connectedDevices);
-  }
+  var info = BluetoothDeviceState.connected;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
         title: const Text("Paired Device"),
       ),
       body: Column(
-        children: [Text('localName: $_flutterBlue.connectedDevices')],
+        children: [Text('localName: $info')],
       ),
     );
   }
