@@ -18,7 +18,8 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   double total = 0, max = 0;
   late StreamSubscription<dynamic> _sensor;
   void initState() {
-    _sensor = userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+    _sensor =
+        userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
       x = event.x;
       y = event.y;
       z = event.z;
@@ -35,7 +36,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        globalcharacteristic.write([20, 30], withoutResponse: true);
+        await globalcharacteristic.write([20, 30], withoutResponse: true);
         max = 0;
       }
 
