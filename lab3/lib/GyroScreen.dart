@@ -18,7 +18,7 @@ class _GyroScreenState extends State<GyroScreen> {
   double x = 0, y = 0, z = 0;
   double max = 0;
   void initState() {
-    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
+    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) async {
       x = event.x;
       y = event.y;
       z = event.z;
@@ -39,9 +39,9 @@ class _GyroScreenState extends State<GyroScreen> {
 
         setState(() {});
         if (max > 0)
-          characteristic.write([max.round(), 0], withoutResponse: true);
+          await characteristic.write([max.round(), 0], withoutResponse: true);
         else
-          characteristic.write([max.round(), 1], withoutResponse: true);
+          await characteristic.write([max.round(), 1], withoutResponse: true);
         max = 0;
       }
 

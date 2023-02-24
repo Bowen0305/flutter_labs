@@ -18,7 +18,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
   late StreamSubscription<dynamic> _sensor;
   @override
   void initState() {
-    _sensor = ProximitySensor.events.listen((int event) {
+    _sensor = ProximitySensor.events.listen((int event) async {
       if (event != prev_event) {
         prev_event = event;
         int i = 0;
@@ -27,7 +27,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
         }
 
         setState(() {});
-        characteristic.write([event], withoutResponse: true);
+        await characteristic.write([event], withoutResponse: true);
       }
 
       if (globalvalue != 0) {
