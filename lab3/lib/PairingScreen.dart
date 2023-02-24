@@ -65,21 +65,20 @@ class _PairingScreenState extends State<PairingScreen> {
     BluetoothService service = _get_wn_service();
     globalcharacteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
-    while (true) {
-      await globalcharacteristic.setNotifyValue(true);
-      print('listen');
-      globalcharacteristic.value.listen((value) {
-        print('notification received: $value');
-        if (value.length == 2) {
-          globalvalue = value[0].toDouble();
-          global_neg = value[1];
-        }
-        if (value.length == 1) {
-          globalvalue = value[0].toDouble();
-        }
-        print('receive: $globalvalue , $global_neg');
-      });
-    }
+    await globalcharacteristic.setNotifyValue(true);
+    print('listen');
+    globalcharacteristic.value.listen((value) {
+      print('notification received: $value');
+      if (value.length == 2) {
+        globalvalue = value[0].toDouble();
+        global_neg = value[1];
+      }
+      if (value.length == 1) {
+        globalvalue = value[0].toDouble();
+      }
+      print('receive: $globalvalue , $global_neg');
+      globalcharacteristic.setNotifyValue(true);
+    });
 
     // 연결 해제
     super.dispose();
