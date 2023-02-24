@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'GlobalValues.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
@@ -29,7 +29,7 @@ class _PairingScreenState extends State<PairingScreen> {
   StreamSubscription<BluetoothDeviceState>? _stateListener;
 
   List<BluetoothService> bluetoothService = [];
-
+  List<BluetoothService> write_notify_Service = [];
   //
   Map<String, List<int>> notifyDatas = {};
 
@@ -50,12 +50,24 @@ class _PairingScreenState extends State<PairingScreen> {
     connect();
   }
 
+  BluetoothService _get_wn_service() {
+    BluetoothService c = write_notify_Service[0];
+    return c;
+  }
+
   @override
   void dispose() {
     // 상태 리스터 해제
     _stateListener?.cancel();
+    BluetoothService service = _get_wn_service();
+    characteristic = service.characteristics
+        .firstWhere((c) => c.properties.write && c.properties.notify);
+    characteristic.setNotifyValue(true);
+    characteristic.value.listen((value) {
+      globalvalue = value[0].toDouble();
+    });
+
     // 연결 해제
-    disconnect();
     super.dispose();
   }
 
@@ -267,6 +279,9 @@ class _PairingScreenState extends State<PairingScreen> {
       name += '\t\t\tProperties: $properties\n';
       if (data.isNotEmpty) {
         name += '\t\t\t\t$data\n';
+      }
+      if (c.properties == 'Write Notiy ') {
+        write_notify_Service.add(r);
       }
     }
     return Text(name);

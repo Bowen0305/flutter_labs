@@ -4,6 +4,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'PairingScreen.dart';
+import 'GlobalValues.dart';
 
 class BluetoothScreen extends StatefulWidget {
   @override

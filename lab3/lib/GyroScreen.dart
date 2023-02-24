@@ -4,6 +4,7 @@ import 'package:selectable_circle/selectable_circle.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math';
 import 'dart:io';
+import 'GlobalValues.dart';
 
 class GyroScreen extends StatefulWidget {
   @override
@@ -37,6 +38,17 @@ class _GyroScreenState extends State<GyroScreen> {
         }
         max = 0;
         setState(() {});
+      }
+
+      if (globalvalue != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          if (i < 3) dots[i] = globalvalue < (i - 3) * 2 - 5;
+          if (i > 3) dots[i] = globalvalue > (i - 3) * 2 + 5;
+        }
+        globalvalue = 0;
+        setState(() {});
+        globalvalue = 0;
       }
     });
     // super.initState();

@@ -4,6 +4,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math';
 import 'dart:io';
 import 'dart:async';
+import 'GlobalValues.dart';
 
 class AcceleroScreen extends StatefulWidget {
   @override
@@ -33,6 +34,15 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
           dots[i] = max > 10 + i * 10;
         }
         max = 0;
+        setState(() {});
+      }
+
+      if (globalvalue != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = globalvalue > 10 + i * 10;
+        }
+        globalvalue = 0;
         setState(() {});
       }
       // sleep(const Duration(seconds: 1));

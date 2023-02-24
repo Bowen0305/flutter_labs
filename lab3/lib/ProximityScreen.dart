@@ -4,6 +4,7 @@ import 'package:selectable_circle/selectable_circle.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import 'dart:io';
 import 'package:wakelock/wakelock.dart';
+import 'GlobalValues.dart';
 
 class ProximityScreen extends StatefulWidget {
   @override
@@ -24,9 +25,15 @@ class _ProximityScreenState extends State<ProximityScreen> {
         for (i = 0; i < 7; i++) {
           dots[i] = (event > 0) ? true : false;
         }
-        setState(() {
-          Wakelock.enable();
-        });
+        setState(() {});
+      }
+
+      if (globalvalue != 0) {
+        for (int i = 0; i < 7; i++) {
+          dots[i] = (globalvalue > 0) ? true : false;
+        }
+        setState(() {});
+        globalvalue = 0;
       }
 
       // sleep(const Duration(seconds: 1));
