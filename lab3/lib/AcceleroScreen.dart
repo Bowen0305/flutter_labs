@@ -33,6 +33,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         for (i = 0; i < 7; i++) {
           dots[i] = max > 10 + i * 10;
         }
+        characteristic.write([max.round()], withoutResponse: true);
         max = 0;
         setState(() {});
       }

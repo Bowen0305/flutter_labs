@@ -36,7 +36,9 @@ class _GyroScreenState extends State<GyroScreen> {
           if (i < 3) dots[i] = max < (i - 3) * 2 - 5;
           if (i > 3) dots[i] = max > (i - 3) * 2 + 5;
         }
+        characteristic.write([max.round()], withoutResponse: true);
         max = 0;
+
         setState(() {});
       }
 

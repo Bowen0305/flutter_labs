@@ -25,6 +25,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
         for (i = 0; i < 7; i++) {
           dots[i] = (event > 0) ? true : false;
         }
+        characteristic.write([event], withoutResponse: true);
         setState(() {});
       }
 
