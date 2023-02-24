@@ -64,6 +64,7 @@ class _PairingScreenState extends State<PairingScreen> {
     characteristic = service.characteristics
         .firstWhere((c) => c.properties.write && c.properties.notify);
     characteristic.setNotifyValue(true);
+    print('ready_to_listen');
     characteristic.value.listen((value) {
       globalvalue = value[0].toDouble();
       global_neg = value[1];

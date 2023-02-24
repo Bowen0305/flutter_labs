@@ -36,7 +36,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         }
 
         setState(() {});
-        await characteristic.write([0x10], withoutResponse: true);
+        characteristic.write([0x10], withoutResponse: true);
         max = 0;
       }
 

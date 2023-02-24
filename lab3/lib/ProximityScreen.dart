@@ -27,7 +27,7 @@ class _ProximityScreenState extends State<ProximityScreen> {
         }
 
         setState(() {});
-        await characteristic.write([event], withoutResponse: true);
+        characteristic.write([event], withoutResponse: true);
       }
 
       if (globalvalue != 0) {
