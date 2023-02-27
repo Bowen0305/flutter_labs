@@ -31,7 +31,9 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
 
       if (time2 % 100 == 0) {
         print(Text('data'));
-        globalvalue = value[i];
+        globalvalue = value[0];
+        i += 1;
+        if (i > 3) i = 3;
       }
 
       if (globalvalue != 0) {
