@@ -29,7 +29,7 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
       else
         time1 += 200;
 
-      if (time2 % 1000 == 0) {
+      if (time2 % 1000 == 0 && time1 > 20000) {
         print(time2.toString());
         globalvalue = value[0];
         i += 1;
