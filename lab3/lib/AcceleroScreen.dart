@@ -19,38 +19,39 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   late StreamSubscription<dynamic> _sensor;
   void initState() {
     timer();
-    _sensor =
-        userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
-      x = event.x;
-      y = event.y;
-      z = event.z;
-      total = sqrt(x * x + y * y + z * z);
+    // _sensor =
+    //     userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
+    //   x = event.x;
+    //   y = event.y;
+    //   z = event.z;
+    //   total = sqrt(x * x + y * y + z * z);
 
-      if (total > 10) {
-        if (total > max) max = total;
+    //   if (total > 10) {
+    //     if (total > max) max = total;
+    //   }
+
+    //   if (total < 5 && max != 0) {
+    //     int i = 0;
+    //     for (i = 0; i < 7; i++) {
+    //       dots[i] = max > 10 + i * 10;
+    //     }
+
+    //     setState(() {});
+    //     await write([total.round()]);
+    //     max = 0;
+    //   }
+
+    // sleep(const Duration(seconds: 1));
+    // });
+
+    if (globalvalue != 0) {
+      int i = 0;
+      for (i = 0; i < 7; i++) {
+        dots[i] = globalvalue > 10 + i * 10;
       }
-
-      if (total < 5 && max != 0) {
-        int i = 0;
-        for (i = 0; i < 7; i++) {
-          dots[i] = max > 10 + i * 10;
-        }
-
-        setState(() {});
-        await write([total.round()]);
-        max = 0;
-      }
-
-      if (globalvalue != 0) {
-        int i = 0;
-        for (i = 0; i < 7; i++) {
-          dots[i] = globalvalue > 10 + i * 10;
-        }
-        globalvalue = 0;
-        setState(() {});
-      }
-      // sleep(const Duration(seconds: 1));
-    });
+      globalvalue = 0;
+      setState(() {});
+    }
     // super.initState();
   }
 
