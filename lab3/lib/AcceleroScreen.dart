@@ -22,15 +22,15 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
     int time1 = 0;
     int time2 = 0;
     List<double> value = [30, 50, 70, 20];
-    final Stream timer1 = Stream.periodic(Duration(milliseconds: 20), (_) {});
+    final Stream timer1 = Stream.periodic(Duration(milliseconds: 200), (_) {});
     timerr = timer1.listen((event) {
-      if (time1 > 200)
-        time2 += 20;
+      if (time1 > 2000)
+        time2 += 200;
       else
-        time1 += 20;
+        time1 += 200;
 
-      if (time2 % 100 == 0) {
-        print(Text('data'));
+      if (time2 % 1000 == 0) {
+        print(time2.toString());
         globalvalue = value[0];
         i += 1;
         if (i > 3) i = 3;
