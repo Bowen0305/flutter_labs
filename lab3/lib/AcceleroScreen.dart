@@ -18,7 +18,28 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   double total = 0, max = 0;
   late StreamSubscription<dynamic> _sensor;
   void initState() {
-    timer();
+    int i = 0;
+    int time1 = 0;
+    int time2 = 0;
+    List<double> value = [30, 50, 70, 20];
+    final Stream timer1 = Stream.periodic(Duration(milliseconds: 20), (_) {});
+    timerr = timer1.listen((event) {
+      if (time1 > 200)
+        time2 += 20;
+      else
+        time1 += 20;
+
+      if (time2 % 100 == 0) globalvalue = value[i];
+
+      if (globalvalue != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = globalvalue > 10 + i * 10;
+        }
+        globalvalue = 0;
+        setState(() {});
+      }
+    });
     // _sensor =
     //     userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
     //   x = event.x;
@@ -44,20 +65,12 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
     // sleep(const Duration(seconds: 1));
     // });
 
-    if (globalvalue != 0) {
-      int i = 0;
-      for (i = 0; i < 7; i++) {
-        dots[i] = globalvalue > 10 + i * 10;
-      }
-      globalvalue = 0;
-      setState(() {});
-    }
     // super.initState();
   }
 
   @override
   void dispose() {
-    _sensor.cancel();
+    // _sensor.cancel();
     timerr.cancel();
     super.dispose();
   }
