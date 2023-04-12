@@ -18,44 +18,16 @@ class _ProximityScreenState extends State<ProximityScreen> {
   late StreamSubscription<dynamic> _sensor;
   @override
   void initState() {
-    // _sensor = ProximitySensor.events.listen((int event) {
-    //   if (event != prev_event) {
-    //     prev_event = event;
-    //     int i = 0;
-    //     for (i = 0; i < 7; i++) {
-    //       dots[i] = (event > 0) ? true : false;
-    //     }
+    _sensor = ProximitySensor.events.listen((int event) {
+      if (event != prev_event) {
+        prev_event = event;
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = (event > 0) ? true : false;
+        }
 
-    //     setState(() {});
-    //     globalcharacteristic.write([event], withoutResponse: true);
-    //   }
-
-    //   if (globalvalue != 0) {
-    //     for (int i = 0; i < 7; i++) {
-    //       dots[i] = (globalvalue > 0) ? true : false;
-    //     }
-    //     setState(() {});
-    //     globalvalue = 0;
-    //   }
-
-    //   // sleep(const Duration(seconds: 1));
-    // });
-    int i = 0;
-    int time1 = 0;
-    int time2 = 0;
-    List<double> value = [-1, 1, -1, 1];
-    final Stream timer1 = Stream.periodic(Duration(milliseconds: 200), (_) {});
-    timerr = timer1.listen((event) {
-      if (time1 > 2000)
-        time2 += 200;
-      else
-        time1 += 200;
-
-      if (time2 % 2000 == 0 && time1 > 2000) {
-        print(time2.toString());
-        globalvalue = value[i];
-        i += 1;
-        if (i > 3) i = 3;
+        setState(() {});
+        globalcharacteristic.write([event], withoutResponse: true);
       }
 
       if (globalvalue != 0) {
@@ -65,7 +37,10 @@ class _ProximityScreenState extends State<ProximityScreen> {
         setState(() {});
         globalvalue = 0;
       }
+
+      // sleep(const Duration(seconds: 1));
     });
+
     super.initState();
   }
 

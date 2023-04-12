@@ -18,22 +18,26 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
   double total = 0, max = 0;
   late StreamSubscription<dynamic> _sensor;
   void initState() {
-    int i = 0;
-    int time1 = 0;
-    int time2 = 0;
-    List<double> value = [30, 50, 70, 20];
-    final Stream timer1 = Stream.periodic(Duration(milliseconds: 200), (_) {});
-    timerr = timer1.listen((event) {
-      if (time1 > 2000)
-        time2 += 200;
-      else
-        time1 += 200;
+    _sensor =
+        userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
+      x = event.x;
+      y = event.y;
+      z = event.z;
+      total = sqrt(x * x + y * y + z * z);
 
-      if (time2 % 2000 == 0 && time1 > 2000) {
-        print(time2.toString());
-        globalvalue = value[i];
-        i += 1;
-        if (i > 3) i = 3;
+      if (total > 10) {
+        if (total > max) max = total;
+      }
+
+      if (total < 5 && max != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          dots[i] = max > 10 + i * 10;
+        }
+
+        setState(() {});
+        await write([total.round()]);
+        max = 0;
       }
 
       if (globalvalue != 0) {
@@ -44,39 +48,14 @@ class _AcceleroScreenState extends State<AcceleroScreen> {
         globalvalue = 0;
         setState(() {});
       }
+      // sleep(const Duration(seconds: 1));
     });
-    // _sensor =
-    //     userAccelerometerEvents.listen((UserAccelerometerEvent event) async {
-    //   x = event.x;
-    //   y = event.y;
-    //   z = event.z;
-    //   total = sqrt(x * x + y * y + z * z);
-
-    //   if (total > 10) {
-    //     if (total > max) max = total;
-    //   }
-
-    //   if (total < 5 && max != 0) {
-    //     int i = 0;
-    //     for (i = 0; i < 7; i++) {
-    //       dots[i] = max > 10 + i * 10;
-    //     }
-
-    //     setState(() {});
-    //     await write([total.round()]);
-    //     max = 0;
-    //   }
-
-    // sleep(const Duration(seconds: 1));
-    // });
-
     // super.initState();
   }
 
   @override
   void dispose() {
-    // _sensor.cancel();
-    timerr.cancel();
+    _sensor.cancel();
     super.dispose();
   }
 

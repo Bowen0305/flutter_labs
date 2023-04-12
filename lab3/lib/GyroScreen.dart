@@ -18,69 +18,51 @@ class _GyroScreenState extends State<GyroScreen> {
   double x = 0, y = 0, z = 0;
   double max = 0;
   void initState() {
-    // _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
-    //   x = event.x;
-    //   y = event.y;
-    //   z = event.z;
-    //   if (z.abs() > 5) {
-    //     if (z > 0) {
-    //       if (z > max) max = z;
-    //     } else {
-    //       if (z < max) max = z;
-    //     }
-    //   }
+    _sensor = gyroscopeEvents.listen((GyroscopeEvent event) {
+      x = event.x;
+      y = event.y;
+      z = event.z;
+      if (z.abs() > 5) {
+        if (z > 0) {
+          if (z > max) max = z;
+        } else {
+          if (z < max) max = z;
+        }
+      }
 
-    //   if (z.abs() < 1 && max != 0) {
-    //     int i = 0;
-    //     for (i = 0; i < 7; i++) {
-    //       if (i < 3) dots[i] = max < (i - 3) * 2 - 5;
-    //       if (i > 3) dots[i] = max > (i - 3) * 2 + 5;
-    //     }
+      if (z.abs() < 1 && max != 0) {
+        int i = 0;
+        for (i = 0; i < 7; i++) {
+          if (i < 3) dots[i] = max < (i - 3) * 2 - 5;
+          if (i > 3) dots[i] = max > (i - 3) * 2 + 5;
+        }
 
-    //     setState(() {});
-    //     if (max > 0)
-    //       globalcharacteristic.write([max.round(), 0], withoutResponse: true);
-    //     else
-    //       globalcharacteristic.write([max.round(), 1], withoutResponse: true);
-    //     max = 0;
-    //   }
-
-    int j = 0;
-    int time1 = 0;
-    int time2 = 0;
-    List<double> value = [20, 30, -20];
-    final Stream timer1 = Stream.periodic(Duration(milliseconds: 200), (_) {});
-    timerr = timer1.listen((event) {
-      if (time1 > 2000)
-        time2 += 200;
-      else
-        time1 += 200;
-
-      if (time2 % 2000 == 0 && time1 > 2000) {
-        print(time2.toString());
-        globalvalue = value[j];
-        j += 1;
-        if (j > 2) j = 2;
+        setState(() {});
+        if (max > 0)
+          globalcharacteristic.write([max.round(), 0], withoutResponse: true);
+        else
+          globalcharacteristic.write([max.round(), 1], withoutResponse: true);
+        max = 0;
       }
 
       if (globalvalue != 0) {
         int i = 0;
+        if (global_neg == 1) globalvalue = globalvalue * -1;
+
         for (i = 0; i < 7; i++) {
           if (i < 3) dots[i] = globalvalue < (i - 3) * 2 - 5;
           if (i > 3) dots[i] = globalvalue > (i - 3) * 2 + 5;
         }
-
         setState(() {});
+        globalvalue = 0;
       }
     });
-    // });
     // super.initState();
   }
 
   @override
   void dispose() {
-    // _sensor.cancel();
-    timerr.cancel();
+    _sensor.cancel();
     super.dispose();
   }
 
